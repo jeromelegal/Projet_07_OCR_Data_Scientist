@@ -1,6 +1,9 @@
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# HTML
+.html
+
 # IPython
 profile_default/
 ipython_config.py
