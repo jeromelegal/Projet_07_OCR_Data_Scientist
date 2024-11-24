@@ -27,3 +27,10 @@ Effectivement, si un modèle de ML réussit à avoir un impact métier fort dans
  
 
 L’ensemble des pratiques et raisonnements qui impactent le cycle de vie d’un modèle est souvent groupé sous le terme MLOps (Machine Learning Operations) qui se démocratise de plus en plus dans la communauté Data Science et dans les prérequis des fiches de postes. En somme, il ne suffit plus aujourd'hui d’avoir la capacité de créer des modèles, il faut également avoir les compétences techniques pour les rendre accessibles à l'échelle et de les faire vivre dans le temps, faute de quoi votre modèle cessera d’avoir l’impact métier positif qu’il a eu initialement dans votre entreprise.
+
+
+# Librairie personnelle :
+Dans le dossier "modules", une librairie custom : my_functions.py
+
+Description :
+Cette bibliothèque contient des fonctions personnalisées pour le projet Projet_07.

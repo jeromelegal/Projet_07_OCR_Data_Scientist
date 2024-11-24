@@ -10,7 +10,12 @@ ipython_config.py
 
 # Source data
 data/
+my_functions.egg-info/
+cache/
 
 # Test notebooks
 kaggle/
 notebooks/archives/
+notebooks/mlflow_env/
+notebooks/mlruns/
+
