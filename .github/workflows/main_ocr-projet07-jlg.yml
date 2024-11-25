@@ -35,7 +35,8 @@ jobs:
 
       - name: Zip artifact for deployment
         working-directory: fastapi
-        run: zip release.zip ./* -r
+        run: |
+          zip -r release.zip ./*
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -75,5 +76,5 @@ jobs:
         with:
           app-name: 'OCR-projet07-JLG'
           slot-name: 'Production'
-          package: fastapi/release.zip
+          package: release.zip
           
