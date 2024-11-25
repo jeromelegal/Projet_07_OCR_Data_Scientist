@@ -7,21 +7,18 @@ class PredictionRequest(BaseModel):
 
 app = FastAPI()
 
-# URL de MLflow
-MLFLOW_URL = "http://192.168.2.189:5000/invocations"
+# URL de MLflow local
+#MLFLOW_URL = "http://192.168.2.189:5000/invocations"
+
+# URL de MLflow Azure
+MLFLOW_URL = "http://mlflowjlg.azurecontainer.io:5000/invocations"
 
 @app.post("/predict")
 async def predict(data: PredictionRequest):
     try:
         # Envoyer les données à MLflow
         response = requests.post(MLFLOW_URL, json=data.dict())
-
-        # Vérifier le statut de la réponse
-        if response.status_code != 200:
-            raise HTTPException(
-                status_code=response.status_code,
-                detail=f"Erreur depuis MLflow: {response.text}"
-            )
+        response.raise_for_status() 
 
         # Retourner la réponse de MLflow
         return response.json()
