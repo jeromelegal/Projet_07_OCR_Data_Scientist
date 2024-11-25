@@ -45,11 +45,11 @@ jobs:
           path: fastapi/release.zip
 
       - name: Login to Azure Container Registry
-      uses: azure/docker-login@v2
-      with:
-        login-server: mlflowjlg.azurecr.io
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        uses: azure/docker-login@v2
+        with:
+          login-server: mlflowjlg.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and Push MLflow Docker Image
         run: |
