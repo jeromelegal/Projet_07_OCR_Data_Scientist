@@ -1,3 +1,7 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+
 name: Build and deploy Python app to Azure Web App - OCR-projet07-JLG
 
 on:
@@ -9,19 +13,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:           
-      id-token: write
-      contents: read
+    permissions:             
+      id-token: write        
+      contents: read 
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_02C9739B96204391B8CB557DB067944C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_779B795E4C1F4EE79F9E34933F607AAC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4266C2327AF94189AF46FE130574A065 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Set up Python version
         uses: actions/setup-python@v5
@@ -32,10 +35,12 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-
+      
       - name: Install dependencies
         working-directory: fastapi
         run: pip install -r requirements.txt
+        
+      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
         working-directory: fastapi
@@ -47,7 +52,7 @@ jobs:
         with:
           name: python-app
           path: fastapi/release.zip
-
+        
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v2
         with:
@@ -59,6 +64,13 @@ jobs:
         run: |
           docker build -t mlflowjlg.azurecr.io/mlflow-model:latest ./mlflow
           docker push mlflowjlg.azurecr.io/mlflow-model:latest
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_02C9739B96204391B8CB557DB067944C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_779B795E4C1F4EE79F9E34933F607AAC }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4266C2327AF94189AF46FE130574A065 }}
 
       - name: Deploy MLflow to Azure Container Instances
         run: |
@@ -78,7 +90,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -89,6 +101,7 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
