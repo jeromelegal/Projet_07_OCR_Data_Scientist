@@ -59,7 +59,7 @@ jobs:
       - name: Deploy MLflow to Azure Container Instances
         run: |
           az container create \
-            --resource-group <TON_RESOURCE_GROUP> \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --name mlflow-container \
             --image mlflowjlg.azurecr.io/mlflow-model:latest \
             --cpu 1 \
