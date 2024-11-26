@@ -56,6 +56,13 @@ jobs:
           docker build -t mlflowjlg.azurecr.io/mlflow-model:latest ./mlflow
           docker push mlflowjlg.azurecr.io/mlflow-model:latest
 
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_02C9739B96204391B8CB557DB067944C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_779B795E4C1F4EE79F9E34933F607AAC }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4266C2327AF94189AF46FE130574A065 }}
+
       - name: Deploy MLflow to Azure Container Instances
         run: |
           az container create \
