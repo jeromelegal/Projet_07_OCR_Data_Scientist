@@ -43,9 +43,6 @@ jobs:
         with:
           name: python-app
           path: fastapi/release.zip
-
-      - name: Check Secrets Availability
-        run: echo "ACR_USERNAME=${{ secrets.ACR_USERNAME }}" && echo "ACR_PASSWORD=${{ secrets.ACR_PASSWORD }}"
         
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v2
