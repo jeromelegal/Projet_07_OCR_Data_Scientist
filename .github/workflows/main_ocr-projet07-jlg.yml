@@ -58,11 +58,6 @@ jobs:
 
       - name: Deploy MLflow to Azure Container Instances
         run: |
-          az login --identity \
-            --username ${{ secrets.AZUREAPPSERVICE_CLIENTID_02C9739B96204391B8CB557DB067944C }} \
-            --password ${{ secrets.AZURE_CLIENT_SECRET }} \
-            --tenant ${{ secrets.AZUREAPPSERVICE_TENANTID_779B795E4C1F4EE79F9E34933F607AAC }}
-
           az container create \
             --resource-group <TON_RESOURCE_GROUP> \
             --name mlflow-container \
