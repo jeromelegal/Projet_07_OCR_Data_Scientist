@@ -1,9 +1,9 @@
 FROM python:3.9-slim
 
-# Installer MLflow et autres dépendances
+# Install mlflow and requirements
 WORKDIR /app
 COPY ./artifacts /app/artifacts  
-COPY ./artifacts/requirements.txt /app/requirements.txt
+COPY ./artifacts/LGBM_production_pipeline_model/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 RUN pip install mlflow[extras]
 
