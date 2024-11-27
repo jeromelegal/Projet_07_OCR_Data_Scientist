@@ -63,6 +63,11 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS_APP }}
             enable-AzPSSession: false
 
+      - name: Debug Azure variables
+        run: |
+          echo "Resource Group: ${{ secrets.AZURE_RESOURCE_GROUP }}"
+          echo "Registry Username: ${{ secrets.ACR_USERNAME }}"
+
       - name: Deploy MLflow to Azure Container Instances
         run: |
           az container create \
@@ -72,7 +77,7 @@ jobs:
             --cpu 1 \
             --memory 1 \
             --ports 5000 \
-            --dns-name-label mlflowjlg-container
+            --dns-name-label mlflowjlg-container \
             --registry-username ${{ secrets.ACR_USERNAME }}
 
   deploy:
