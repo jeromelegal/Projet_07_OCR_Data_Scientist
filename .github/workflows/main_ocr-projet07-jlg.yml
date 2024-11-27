@@ -10,12 +10,13 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+      contents: read
+      id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -95,12 +96,12 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Login to Azure
+      - name: Azure login
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_02C9739B96204391B8CB557DB067944C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_779B795E4C1F4EE79F9E34933F607AAC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4266C2327AF94189AF46FE130574A065 }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
