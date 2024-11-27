@@ -78,7 +78,8 @@ jobs:
             --memory 1 \
             --ports 5000 \
             --dns-name-label mlflowjlg-container \
-            --registry-username ${{ secrets.ACR_USERNAME }}
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }}
 
   deploy:
     runs-on: ubuntu-latest
