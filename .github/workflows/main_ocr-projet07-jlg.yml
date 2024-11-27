@@ -96,6 +96,17 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      - name: Get OIDC Token
+        id: get-oidc-token
+        run: |
+          echo "Requesting OIDC Token..."
+          TOKEN=$(curl -X POST -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL")
+          echo "OIDC Token: $TOKEN"
+          echo "::set-output name=oidc-token::$TOKEN"
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ACTIONS_ID_TOKEN_REQUEST_URL: "https://pipelinesghubeus13.actions.githubusercontent.com/EpJWOiJlXLG52jeaPC7k7eyfwboU7HGX52Efl4zS65DkagD2B9/00000000-0000-0000-0000-000000000000/_apis/distributedtask/hubs/Actions/plans/43db0cc1-59c4-4084-bf2b-fc2a49cd7f88/jobs/ca395085-040a-526b-2ce8-bdc85f692774/idtoken?api-version=2.0&audience=api%3A%2F%2FAzureADTokenExchange"
+
       - name: Azure login
         uses: azure/login@v2
         with:
