@@ -66,7 +66,6 @@ jobs:
       - name: Deploy MLflow to Azure Container Instances
         run: |
           az container create \
-            --registry-username ${{ secrets.ACR_USERNAME }}
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --name mlflow-container \
             --image mlflowjlg.azurecr.io/mlflow-model:latest \
@@ -74,6 +73,7 @@ jobs:
             --memory 1 \
             --ports 5000 \
             --dns-name-label mlflowjlg-container
+            --registry-username ${{ secrets.ACR_USERNAME }}
 
   deploy:
     runs-on: ubuntu-latest
