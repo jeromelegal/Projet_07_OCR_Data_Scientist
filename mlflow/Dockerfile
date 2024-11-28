@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.9.7-slim
 
 # Installer les outils de compilation et les dépendances système
 RUN apt-get update && apt-get install -y \
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install mlflow and requirements
 COPY ./artifacts /app/artifacts
+COPY ./artifacts/LGBM_production_pipeline_model/ /app/artifacts/
 COPY ./artifacts/LGBM_production_pipeline_model/requirements.txt /app/requirements.txt
 
 # Mettre à jour pip
@@ -25,4 +26,4 @@ RUN pip install mlflow[extras]
 EXPOSE 5000
 
 # Commande pour démarrer le serveur MLflow
-CMD ["mlflow", "models", "serve", "-m", "/app/artifacts", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["mlflow", "models", "serve", "--no-conda", "-m", "/app/artifacts", "--host", "0.0.0.0", "--port", "5000"]
