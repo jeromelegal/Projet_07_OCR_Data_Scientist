@@ -11,7 +11,7 @@ app = FastAPI()
 #MLFLOW_URL = "http://192.168.2.189:5000/invocations"
 
 # URL de MLflow Azure
-MLFLOW_URL = "http://mlflowjlg.azurecontainer.io:5000/invocations"
+MLFLOW_URL = "mlflowjlg-container.centralus.azurecontainer.io:5000/invocations"
 
 @app.post("/predict")
 async def predict(data: PredictionRequest):
