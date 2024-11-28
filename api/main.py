@@ -5,6 +5,7 @@ import numpy as np
 import streamlit as st
 import requests
 from pydantic import BaseModel
+import os
 
 ###############################################################################
 # variables :
@@ -86,3 +87,9 @@ if predict_button:
         st.write(results)
     else:
         st.write('Veuillez charger des données.')
+
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8501))  # Utilise 8501 si PORT n'est pas défini
+    st.write(f"L'application est déployée sur le port {port}")
+    os.system(f"streamlit run main.py --server.port {port} --server.address 0.0.0.0")
