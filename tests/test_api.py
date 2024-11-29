@@ -1,7 +1,6 @@
 import requests
 import pytest
 import pandas as pd
-from unittest.mock import patch
 from api.main import format_data_for_api, predict
 import json
 
