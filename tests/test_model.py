@@ -17,7 +17,7 @@ def model():
     artifact_path = "../mlflow/artifacts/LGBM_production_pipeline_model/"
     return mlflow.pyfunc.load_model(artifact_path)
 
-
 def test_model_prediction(model, load_data):
     prediction = model.predict(load_data)
-    assert (np.mean(prediction) < 0.1)
+    assert (np.mean(prediction) < 0.05)
+    
