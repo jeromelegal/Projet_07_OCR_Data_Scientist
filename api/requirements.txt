@@ -3,3 +3,5 @@ numpy
 streamlit
 requests
 pydantic
+pytest
+mlflow[extras]
