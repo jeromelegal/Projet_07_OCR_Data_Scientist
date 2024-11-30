@@ -127,10 +127,6 @@ jobs:
 
       - name: Pause before deployment
         run: sleep 30
-          
-      - name: Clean up previous deployments
-        run: |
-          curl -X DELETE -u ${{ secrets.AZURE_USER }}:${{ secrets.AZURE_PASSWORD }} https://ocr-projet07-jlg-dze9cfcrbzadb4av.germanywestcentral-01.azurewebsites.net/api/zip/site/wwwroot
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
