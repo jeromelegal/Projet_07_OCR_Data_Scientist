@@ -96,4 +96,7 @@ jobs:
 
       - name: Run API tests with Pytest
         working-directory: tests
-        run: ../venv/bin/pytest -v test_api.py
+        run: |
+          export PYTHONPATH=$(pwd)/..
+          source ../venv/bin/activate
+          pytest -v test_api.py
