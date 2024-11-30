@@ -40,7 +40,7 @@ jobs:
         
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip api tests
+          zip -r release.zip api tests venv
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -109,17 +109,28 @@ jobs:
         with:
           python-version: '3.9.16'
 
-      - name: Install dependencies
+      - name: Activate existing virtual environment
         run: |
-          python -m venv venv
           source venv/bin/activate
-          pip install -r api/requirements.txt
+          pip install -r api/requirements.txt  
+
+      - name: Check pytest installation
+        run: |
+          source venv/bin/activate
+          python -m pytest --version
 
       - name: Login to Azure
         uses: azure/login@v1
         with:
             creds: ${{ secrets.AZURE_CREDENTIALS_APP }}
             enable-AzPSSession: false
+
+      - name: Pause before deployment
+        run: sleep 30
+          
+      - name: Clean up previous deployments
+        run: |
+          curl -X DELETE -u ${{ secrets.AZURE_USER }}:${{ secrets.AZURE_PASSWORD }} https://ocr-projet07-jlg-dze9cfcrbzadb4av.germanywestcentral-01.azurewebsites.net/api/zip/site/wwwroot
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
