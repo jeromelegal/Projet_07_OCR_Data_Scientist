@@ -128,6 +128,10 @@ jobs:
       - name: Pause before deployment
         run: sleep 30
 
+      - name: Clean up previous deployments
+        run: |
+          curl -X DELETE -u ${{ secrets.AZURE_USER }}:${{ secrets.AZURE_PASSWORD }} https://<app-name>.scm.azurewebsites.net/api/zip/site/wwwroot
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
@@ -137,7 +141,7 @@ jobs:
           package: release.zip
 
       - name: Wait for API to start
-        run: sleep 30
+        run: sleep 300
 
       - name: Run API tests with Pytest
         working-directory: tests
