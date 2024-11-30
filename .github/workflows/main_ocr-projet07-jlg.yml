@@ -138,10 +138,8 @@ jobs:
       - name: Run Streamlit on API
         working-directory: api
         run: |
-          export PORT=${PORT:-8501}
           source ../venv/bin/activate
-          streamlit run main.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true
-        timeout-minutes: 5
+          streamlit run main.py --server.port=8000 --server.address=0.0.0.0
 
       - name: Wait for Streamlit to start
         run: sleep 30
