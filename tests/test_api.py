@@ -8,7 +8,7 @@ import json
 ### variables
 
 API_URL = "https://ocr-projet07-jlg-dze9cfcrbzadb4av.germanywestcentral-01.azurewebsites.net"
-MLFLOW_URL = "http://mlflowjlg-container.centralus.azurecontainer.io:5000/invocations"
+MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:5000/invocations"
 
 @pytest.fixture
 def expected_json():
