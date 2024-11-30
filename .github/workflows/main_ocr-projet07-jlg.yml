@@ -138,7 +138,7 @@ jobs:
       - name: Run Streamlit on API
         working-directory: api
         run: |
-          export PYTHONPATH=$(pwd)/..
+          export PORT=${PORT:-8501}
           source ../venv/bin/activate
           streamlit run main.py --server.port=$PORT --server.address=0.0.0.0
 
