@@ -133,16 +133,7 @@ jobs:
           package: release.zip
 
       - name: Wait for API to start
-        run: sleep 30
-
-      - name: Run Streamlit on API
-        working-directory: api
-        run: |
-          source ../venv/bin/activate
-          streamlit run main.py --server.port=8000 --server.address=0.0.0.0
-
-      - name: Wait for Streamlit to start
-        run: sleep 30
+        run: sleep 180
 
       - name: Run API tests with Pytest
         working-directory: tests
