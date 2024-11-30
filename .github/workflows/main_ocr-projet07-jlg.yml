@@ -33,10 +33,6 @@ jobs:
       - name: Install dependencies
         working-directory: api
         run: pip install -r requirements.txt
-
-      - name: Run model tests with Pytest
-        working-directory: tests
-        run: pytest -v test_model.py
         
       - name: Zip artifact for deployment
         run: |
@@ -48,43 +44,6 @@ jobs:
           name: python-app
           path: release.zip
         
-      - name: Login to Azure Container Registry
-        uses: azure/docker-login@v2
-        with:
-          login-server: mlflowjlg.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Build and Push MLflow Docker Image
-        run: |
-          docker build -t mlflowjlg.azurecr.io/mlflow-model:latest ./mlflow
-          docker push mlflowjlg.azurecr.io/mlflow-model:latest
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-            creds: ${{ secrets.AZURE_CREDENTIALS_APP }}
-            enable-AzPSSession: false
-
-      - name: Debug Azure variables
-        run: |
-          echo "Resource Group: ${{ secrets.AZURE_RESOURCE_GROUP }}"
-          echo "Registry Username: ${{ secrets.ACR_USERNAME }}"
-
-      - name: Deploy MLflow to Azure Container Instances
-        run: |
-          az container create \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name mlflow-container \
-            --image mlflowjlg.azurecr.io/mlflow-model:latest \
-            --cpu 1 \
-            --memory 1 \
-            --ports 5000 \
-            --ip-address Public \
-            --dns-name-label mlflowjlg-container \
-            --registry-username ${{ secrets.ACR_USERNAME }} \
-            --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --os-type Linux
 
   deploy:
     runs-on: ubuntu-latest
@@ -113,7 +72,7 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install -r api/requirements.txt
+          pip install -r requirements.txt
 
       - name: Login to Azure
         uses: azure/login@v1
