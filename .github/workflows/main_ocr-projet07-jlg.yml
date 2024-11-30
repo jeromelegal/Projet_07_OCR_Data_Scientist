@@ -40,7 +40,7 @@ jobs:
         
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip api tests venv
+          zip -r release.zip api tests
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -103,21 +103,6 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
-      - name: Set up Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9.16'
-
-      - name: Activate existing virtual environment
-        run: |
-          source venv/bin/activate
-          pip install -r api/requirements.txt  
-
-      - name: Check pytest installation
-        run: |
-          source venv/bin/activate
-          python -m pytest --version
 
       - name: Login to Azure
         uses: azure/login@v1
