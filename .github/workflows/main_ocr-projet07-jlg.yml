@@ -78,7 +78,7 @@ jobs:
             --name mlflow-container \
             --image mlflowjlg.azurecr.io/mlflow-model:latest \
             --cpu 1 \
-            --memory 1 \
+            --memory 1.5 \
             --ports 5000 \
             --ip-address Public \
             --dns-name-label mlflowjlg-container \
