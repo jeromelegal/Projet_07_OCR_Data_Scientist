@@ -92,15 +92,6 @@ jobs:
             --os-type Linux
 
             
-      - name: Run API tests inside Azure Container
-        run: |
-          CONTAINER_NAME="api-container"
-          RESOURCE_GROUP="${{ secrets.AZURE_RESOURCE_GROUP }}"
-          COMMAND="pytest -v /app/tests/test_api.py"
-    
-          az container exec \
-            --resource-group $RESOURCE_GROUP \
-            --name $CONTAINER_NAME \
-            --exec-command "/bin/sh -c '${COMMAND}'" \
-            > test_logs.log
-          cat test_logs.log
+      - name: Run API tests 
+        working-directory: tests
+        run: pytest -v test_api.py
