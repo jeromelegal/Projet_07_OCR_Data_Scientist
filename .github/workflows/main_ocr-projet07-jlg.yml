@@ -32,7 +32,7 @@ jobs:
       
       - name: Install dependencies
         working-directory: api
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt --target ./packages
 
         
       - name: Make startup.sh executable
@@ -40,7 +40,7 @@ jobs:
         
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip api tests
+          zip -r release.zip api tests packages
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
