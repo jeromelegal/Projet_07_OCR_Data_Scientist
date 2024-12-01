@@ -68,6 +68,9 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS_APP }}
             enable-AzPSSession: false
 
+      - name: Clean Azure Web App directory
+        run: az webapp delete --name OCR-projet07-JLG --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+
       - name: Pause before deployment
         run: sleep 30
 
