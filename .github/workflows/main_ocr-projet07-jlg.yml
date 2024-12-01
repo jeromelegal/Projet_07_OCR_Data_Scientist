@@ -76,11 +76,11 @@ jobs:
             --registry-password ${{ secrets.ACR_PASSWORD }} \
             --os-type Linux
 
-      - name: Deploy AOI to Azure Container Instances
+      - name: Deploy API to Azure Container Instances
         run: |
           az container create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name api-cintainer \
+            --name api-container \
             --image mlflowjlg.azurecr.io/api_docker:latest \
             --cpu 1 \
             --memory 1.5 \
