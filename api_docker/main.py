@@ -10,7 +10,7 @@ import os
 ###############################################################################
 # variables :
 
-MLFLOW_URL = "http://mlflowjlg-container.centralus.azurecontainer.io:5000/invocations"
+MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:5000/invocations"
 data_json = None
 
 ###############################################################################

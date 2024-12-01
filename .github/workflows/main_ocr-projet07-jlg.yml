@@ -94,4 +94,6 @@ jobs:
             
       - name: Run API tests 
         working-directory: tests
-        run: pytest -v test_api.py
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/..
+          pytest -v test_api.py
