@@ -3,7 +3,6 @@ FROM python:3.9-slim
 
 # Copier les fichiers de votre projet dans le conteneur
 COPY ./api/ /app/api/
-COPY ./tests/ /app/tests/
 COPY ./requirements.txt /app/requirements.txt
 
 # Installer les dépendances
