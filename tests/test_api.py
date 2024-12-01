@@ -1,7 +1,7 @@
 import requests
 import pytest
 import pandas as pd
-from api.main import format_data_for_api, predict
+from api_docker.main import format_data_for_api, predict
 import json
 
 ##############################################################################################
