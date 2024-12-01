@@ -31,39 +31,29 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: pip install -r api/requirements.txt --target ./packages
+        working-directory: api_docker
+        run: pip install -r requirements.txt
 
+      - name: Run model tests with Pytest
+        working-directory: tests
+        run: pytest -v test_model.py
         
-      - name: Make startup.sh executable
-        run: chmod +x api/startup.sh
-        
-      - name: Zip artifact for deployment
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v2
+        with:
+          login-server: mlflowjlg.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push MLflow Docker Image
         run: |
-          zip -r release.zip api tests packages
+          docker build -t mlflowjlg.azurecr.io/mlflow-model:latest ./mlflow
+          docker push mlflowjlg.azurecr.io/mlflow-model:latest
 
-      - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-app
-          path: release.zip
-        
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      contents: read
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
+      - name: Build and Push API Docker Image
+        run: |
+          docker build -t mlflowjlg.azurecr.io/api_docker:latest ./api_docker
+          docker push mlflowjlg.azurecr.io/api_docker:latest
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -71,14 +61,46 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS_APP }}
             enable-AzPSSession: false
 
-      - name: Pause before deployment
-        run: sleep 30
+      - name: Deploy MLflow to Azure Container Instances
+        run: |
+          az container create \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name mlflow-container \
+            --image mlflowjlg.azurecr.io/mlflow-model:latest \
+            --cpu 1 \
+            --memory 1.5 \
+            --ports 5000 \
+            --ip-address Public \
+            --dns-name-label mlflowjlg-container \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --os-type Linux
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
-        with:
-          app-name: 'OCR-projet07-JLG'
-          slot-name: 'Production'
-          package: release.zip
+      - name: Deploy AOI to Azure Container Instances
+        run: |
+          az container create \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name api-cintainer \
+            --image mlflowjlg.azurecr.io/api_docker:latest \
+            --cpu 1 \
+            --memory 1.5 \
+            --ports 8501 \
+            --ip-address Public \
+            --dns-name-label api-container \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --os-type Linux
 
+            
+      - name: Run API tests inside Azure Container
+        run: |
+          CONTAINER_NAME="api-container"
+          RESOURCE_GROUP="${{ secrets.AZURE_RESOURCE_GROUP }}"
+          COMMAND="pytest -v /app/tests/test_api.py"
+    
+          az container exec \
+            --resource-group $RESOURCE_GROUP \
+            --name $CONTAINER_NAME \
+            --exec-command "/bin/sh -c '${COMMAND}'" \
+            > test_logs.log
+          cat test_logs.log
