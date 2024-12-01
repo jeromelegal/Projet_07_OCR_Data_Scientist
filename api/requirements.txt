@@ -7,4 +7,3 @@ pytest
 mlflow
 lightgbm
 scikit-learn==1.5.1
-pytest
