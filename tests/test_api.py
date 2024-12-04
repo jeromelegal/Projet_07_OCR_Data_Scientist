@@ -7,8 +7,9 @@ import json
 ##############################################################################################
 ### variables
 
-API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8501"
+API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8000"
 MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:5000/invocations"
+GUI_URL = "http://gui-container.germanywestcentral.azurecontainer.io:8501"
 
 @pytest.fixture
 def expected_json():
@@ -20,10 +21,10 @@ def expected_json():
 ### test functions 
 
 # verify if Azure Web App is correctly booted and API accessible
-def test_app_started():
+def test_gui_app_started():
     try:
-        response = requests.get(API_URL)  
-        assert response.status_code == 200, "API is not accessible (status not : 200)."
+        response = requests.get(GUI_URL)  
+        assert response.status_code == 200, "GUI is not accessible (status not : 200)."
         assert "Streamlit" in response.text, "Streamlit is not correctly booted"
         #assert "Prêt à dépenser" in response.text, "Streamlit is not correctly booted"
 
