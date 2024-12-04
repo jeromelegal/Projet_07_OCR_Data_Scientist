@@ -14,11 +14,14 @@ API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8000/predic
 # fonctions :
 
 def transfer_csv(url, uploaded_file):
-    files = {'file': (uploaded_file.name, uploaded_file, 'text/csv')}
-    response = requests.post(url, files=files)
-    if response.status_code != 200:
-        print(f"Echec de l'envoi: {response.status_code}, {response.text}")
-    return response
+    files = {'file': (uploaded_file.name, uploaded_file.getvalue(), 'text/csv')}
+    try:
+        response = requests.post(url, files=files)
+        response.raise_for_status()  # Lève une exception en cas de statut HTTP >= 400
+        return response
+    except requests.exceptions.RequestException as e:
+        st.error(f"Erreur lors de la requête vers l'API : {str(e)}")
+        return None
 
 
 ###############################################################################
@@ -31,24 +34,26 @@ uploaded_file = st.file_uploader("Upload csv")
 predict_button = st.button("Prédiction")
 
 if uploaded_file is not None:
-    csv_file = pd.read_csv(uploaded_file)
-    st.write("Dataset chargé.")
+    try:
+        if uploaded_file.type == "text/csv":
+            csv_file = pd.read_csv(uploaded_file)
+            st.write("Dataset chargé.")
+            st.write(csv_file.head())
+        else:
+            st.error("Veuillez télécharger un fichier au format CSV.")
+    except pd.errors.EmptyDataError:
+        st.error("Le fichier CSV est vide ou invalide.")
 
 
 if predict_button:
     if uploaded_file is not None:
         response = transfer_csv(API_URL, uploaded_file)
-        if response.status_code == 200:
+        if response and response.status_code == 200:
             results = response.json()
             st.write("Résultats de la prédiction :")
-            st.json(results)  
+            st.json(results)
         else:
-            st.error(f"Erreur API ({response.status_code}): {response.text}")
+            st.error("Impossible de récupérer une réponse correcte de l'API.")
     else:
-        st.error('Veuillez charger un fichier CSV avant de lancer la prédiction.')
+        st.error("Veuillez charger un fichier CSV avant de lancer la prédiction.")
 
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8501))  
-    st.write(f"L'application est déployée sur le port {port}")
-    os.system(f"streamlit run app/main.py --server.port {port} --server.address 0.0.0.0")
