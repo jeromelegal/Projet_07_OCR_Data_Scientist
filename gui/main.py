@@ -19,6 +19,7 @@ def transfer_csv(url, file):
         response = requests.post(url, files=files)
     if response.status_code != 200:
         print(f"Echec de l'envoi: {response.status_code}, {response.text}")
+    return response
 
 
 ###############################################################################
@@ -51,4 +52,4 @@ if predict_button:
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8501))  
     st.write(f"L'application est déployée sur le port {port}")
-    os.system(f"streamlit run main.py --server.port {port} --server.address 0.0.0.0")
+    os.system(f"streamlit run app/main.py --server.port {port} --server.address 0.0.0.0")
