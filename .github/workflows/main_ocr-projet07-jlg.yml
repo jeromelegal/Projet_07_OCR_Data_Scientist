@@ -52,8 +52,13 @@ jobs:
 
       - name: Build and Push API Docker Image
         run: |
-          docker build -t mlflowjlg.azurecr.io/api_docker:latest ./api_docker
-          docker push mlflowjlg.azurecr.io/api_docker:latest
+          docker build -t mlflowjlg.azurecr.io/api:latest ./api
+          docker push mlflowjlg.azurecr.io/api:latest
+
+      - name: Build and Push GUI Docker Image
+        run: |
+          docker build -t mlflowjlg.azurecr.io/gui:latest ./gui
+          docker push mlflowjlg.azurecr.io/gui:latest
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -81,12 +86,27 @@ jobs:
           az container create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --name api-container \
-            --image mlflowjlg.azurecr.io/api_docker:latest \
+            --image mlflowjlg.azurecr.io/api:latest \
             --cpu 1 \
             --memory 1.5 \
             --ports 8501 \
             --ip-address Public \
             --dns-name-label api-container \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
+            --os-type Linux
+
+      - name: Deploy GUI to Azure Container Instances
+        run: |
+          az container create \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name gui-container \
+            --image mlflowjlg.azurecr.io/gui:latest \
+            --cpu 1 \
+            --memory 1.5 \
+            --ports 8000 \
+            --ip-address Public \
+            --dns-name-label gui-container \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
             --os-type Linux
