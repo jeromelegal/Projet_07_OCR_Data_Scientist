@@ -9,7 +9,7 @@ COPY ./main.py /main.py
 COPY ./requirements.txt /requirements.txt
 
 # Installer les dépendances
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 # Exposer le port pour Fastapi
 EXPOSE 8000

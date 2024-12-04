@@ -1,5 +1,8 @@
 FROM python:3.9.7-slim
 
+# Définir le répertoire de travail
+WORKDIR /app
+
 # Installer les outils de compilation et les dépendances système
 RUN apt-get update && apt-get install -y \
     gcc \
@@ -9,15 +12,15 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install mlflow and requirements
-COPY ./artifacts /app/artifacts
-COPY ./artifacts/LGBM_production_pipeline_model/ /app/artifacts/
-COPY ./artifacts/LGBM_production_pipeline_model/requirements.txt /app/requirements.txt
+COPY ./artifacts /artifacts
+COPY ./artifacts/LGBM_production_pipeline_model/ /artifacts/
+COPY ./artifacts/LGBM_production_pipeline_model/requirements.txt /requirements.txt
 
 # Mettre à jour pip
 RUN pip install --upgrade pip
 
 # Installer les dépendances Python
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 # (Facultatif) Installer mlflow avec des extras
 RUN pip install mlflow[extras]
