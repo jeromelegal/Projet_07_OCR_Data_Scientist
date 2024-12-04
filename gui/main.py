@@ -35,12 +35,9 @@ predict_button = st.button("Prédiction")
 
 if uploaded_file is not None:
     try:
-        if uploaded_file.type == "text/csv":
-            csv_file = pd.read_csv(uploaded_file)
-            st.write("Dataset chargé.")
-            st.write(csv_file.head())
-        else:
-            st.error("Veuillez télécharger un fichier au format CSV.")
+        csv_file = pd.read_csv(uploaded_file)
+        st.write("Dataset chargé.")
+        st.write(csv_file.head())  # Montre un aperçu des données
     except pd.errors.EmptyDataError:
         st.error("Le fichier CSV est vide ou invalide.")
 
