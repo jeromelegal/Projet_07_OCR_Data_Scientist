@@ -89,7 +89,7 @@ jobs:
             --image mlflowjlg.azurecr.io/api:latest \
             --cpu 1 \
             --memory 1.5 \
-            --ports 8501 \
+            --ports 8000 \
             --ip-address Public \
             --dns-name-label api-container \
             --registry-username ${{ secrets.ACR_USERNAME }} \
@@ -104,7 +104,7 @@ jobs:
             --image mlflowjlg.azurecr.io/gui:latest \
             --cpu 1 \
             --memory 1.5 \
-            --ports 8000 \
+            --ports 8501 \
             --ip-address Public \
             --dns-name-label gui-container \
             --registry-username ${{ secrets.ACR_USERNAME }} \
