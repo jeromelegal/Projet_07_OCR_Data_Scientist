@@ -1,9 +1,7 @@
-pandas
-numpy
-streamlit
+fastapi
+uvicorn
 requests
 pydantic
-pytest
-mlflow
-lightgbm
-scikit-learn==1.5.1
+pandas
+numpy
+

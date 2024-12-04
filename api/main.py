@@ -1,24 +1,31 @@
-# import librairies :
+###############################################################################
+# import libraries
 
-import pandas as pd
-import numpy as np
-import streamlit as st
+from fastapi import FastAPI, File, UploadFile
 import requests
 from pydantic import BaseModel
-import os
+import pandas as pd
+import numpy as np
+from io import StringIO
+
+
 
 ###############################################################################
-# variables :
+# instances and classes
 
-MLFLOW_URL = "http://mlflowjlg-container.centralus.azurecontainer.io:5000/invocations"
+app = FastAPI()
 data_json = None
-
-###############################################################################
-# fonctions :
 
 class PredictionRequest(BaseModel):
     dataframe_split: dict
 
+###############################################################################
+# variables :
+
+MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:5000/invocations"
+
+###############################################################################
+# functions :
 
 def format_data_for_api(df):
     """
@@ -46,50 +53,31 @@ def format_data_for_api(df):
     }
 
 
-def predict(data: PredictionRequest):
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
     try:
-        # Envoyer les données à MLflow
-        response = requests.post(MLFLOW_URL, json=data)
-        response.raise_for_status() 
+        # Lire le contenu du fichier CSV
+        file_content = await file.read()
+        csv_data = StringIO(file_content.decode('utf-8'))
+        df = pd.read_csv(csv_data)
 
-        # Retourner la réponse de MLflow
+        # Formater les données pour PredictionRequest
+        formatted_data = format_data_for_api(df)
+
+        prediction_request = PredictionRequest(**formatted_data)
+
+        # Envoyer les données à MLflow
+        response = requests.post(MLFLOW_URL, json=prediction_request.dict())
+        response.raise_for_status()
+
+        # Retourner les résultats de MLflow
         return response.json()
 
+    except pd.errors.EmptyDataError:
+        raise HTTPException(status_code=400, detail="Le fichier CSV est vide ou invalide.")
     except requests.exceptions.RequestException as e:
-        # Gestion des erreurs liées à la requête HTTP
-        st.error(f"Erreur lors de la requête : {e}")
-        return None
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la requête vers MLflow : {str(e)}")
     except Exception as e:
-        # Gestion des autres erreurs
-        st.error(f"Une erreur inattendue s'est produite : {e}")
-        return None
+        raise HTTPException(status_code=500, detail=f"Une erreur inattendue s'est produite : {str(e)}")
 
-
-###############################################################################
-# Interface graphique :
-
-st.title("Prêt à dépenser")
-st.header("Outil de 'Scoring crédit' :")
-
-uploaded_file = st.file_uploader("Upload csv")
-predict_button = st.button("Prédiction")
-
-if uploaded_file is not None:
-    # Can be used wherever a "file-like" object is accepted:
-    df = pd.read_csv(uploaded_file)
-    data_json = format_data_for_api(df)
-    st.write("Dataset chargé.")
-
-
-if predict_button:
-    if data_json is not None:
-        results = predict(data_json)
-        st.write(results)
-    else:
-        st.write('Veuillez charger des données.')
-
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8501))  # Utilise 8501 si PORT n'est pas défini
-    st.write(f"L'application est déployée sur le port {port}")
-    os.system(f"streamlit run main.py --server.port {port} --server.address 0.0.0.0")
+    

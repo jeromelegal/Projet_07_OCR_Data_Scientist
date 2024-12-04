@@ -16,7 +16,6 @@ dependencies:
   - lightgbm==4.5.0
   - lz4==4.3.2
   - matplotlib==3.9.2
-  - my_functions @ file:///data/Formation_OC/Projet_07
   - numpy==1.26.4
   - pandas==2.2.2
   - pathlib==1.0.1
