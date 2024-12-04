@@ -5,11 +5,11 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copier les fichiers de votre projet dans le conteneur
-COPY ./main.py /main.py
-COPY ./requirements.txt /requirements.txt
+COPY ./main.py /app/main.py
+COPY ./requirements.txt /app/requirements.txt
 
 # Installer les dépendances
-RUN pip install --no-cache-dir -r /requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Exposer le port pour Fastapi
 EXPOSE 8000

@@ -13,10 +13,9 @@ API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8000/predic
 ###############################################################################
 # fonctions :
 
-def transfer_csv(url, file):
-    with open(file, 'rb'):
-        files = {'file': (file,'text/csv')}
-        response = requests.post(url, files=files)
+def transfer_csv(url, uploaded_file):
+    files = {'file': (uploaded_file.name, uploaded_file, 'text/csv')}
+    response = requests.post(url, files=files)
     if response.status_code != 200:
         print(f"Echec de l'envoi: {response.status_code}, {response.text}")
     return response
@@ -42,7 +41,7 @@ if predict_button:
         if response.status_code == 200:
             results = response.json()
             st.write("Résultats de la prédiction :")
-            st.json(results)  # Affiche les résultats au format JSON
+            st.json(results)  
         else:
             st.error(f"Erreur API ({response.status_code}): {response.text}")
     else:

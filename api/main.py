@@ -2,6 +2,7 @@
 # import libraries
 
 from fastapi import FastAPI, File, UploadFile
+from fastapi.exceptions import HTTPException
 import requests
 from pydantic import BaseModel
 import pandas as pd
