@@ -7,7 +7,7 @@ import json
 ##############################################################################################
 ### variables
 
-API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8000"
+API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8000/predict"
 MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:5000/invocations"
 GUI_URL = "http://gui-container.germanywestcentral.azurecontainer.io:8501"
 
@@ -20,21 +20,28 @@ def expected_json():
 ##############################################################################################
 ### test functions 
 
-# verify if Azure Web App is correctly booted and API accessible
-def test_gui_app_started():
+# verify if GUI container is correctly booted 
+def test_gui_container_started():
     try:
         response = requests.get(GUI_URL)  
         assert response.status_code == 200, "GUI is not accessible (status not : 200)."
         assert "Streamlit" in response.text, "Streamlit is not correctly booted"
-        #assert "Prêt à dépenser" in response.text, "Streamlit is not correctly booted"
 
     except requests.exceptions.RequestException as e:
-        pytest.fail(f"L'application n'est pas accessible : {e}")
+        pytest.fail(f"Le container GUI n'est pas accessible : {e}")
+
+# verify if API container is correctly booted 
+def test_api_container_started():
+    try:
+        response = requests.get(API_URL)  
+        assert response.status_code == 405, "API is not accessible (status not : 405)."
+    
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Le container API n'est pas accessible : {e}")
 
 # verify if ACR is correctly booted accessible
-def test_container_accessibility(expected_json):
+def test_model_container_started(expected_json):
     try:
-
         response = requests.post(MLFLOW_URL, json=expected_json)  
         assert response.status_code == 200, "MLflow container is not accessible."
     except requests.exceptions.RequestException as e:
