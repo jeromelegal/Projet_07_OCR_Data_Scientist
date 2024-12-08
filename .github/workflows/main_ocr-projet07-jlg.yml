@@ -116,10 +116,4 @@ jobs:
         working-directory: tests
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/..
-          pytest -v test_api.py --junitxml=results.xml
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: pytest-results
-          path: tests/results.xml
+          pytest -v test_api.py
