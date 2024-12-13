@@ -29,7 +29,7 @@ MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:50
 ###############################################################################
 # shap :
 
-with open("./app/model.pkl", "rb") as file:
+with open("app/model.pkl", "rb") as file:
     pipeline  = pickle.load(file)
 
 model_with_threshold = pipeline.named_steps['model_with_threshold']
