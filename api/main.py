@@ -10,6 +10,7 @@ import numpy as np
 from io import StringIO
 import shap
 import pickle
+import os
 
 
 ###############################################################################
@@ -29,8 +30,9 @@ MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:50
 ###############################################################################
 # shap :
 
-with open("model.pkl", "rb") as file:
-    pipeline  = pickle.load(file)
+model_path = os.path.join(os.getcwd(), "model.pkl")
+with open(model_path, "rb") as file:
+    pipeline = pickle.load(file)
 
 model_with_threshold = pipeline.named_steps['model_with_threshold']
 lgbm_model = model_with_threshold.model  # Accéder au modèle encapsulé
