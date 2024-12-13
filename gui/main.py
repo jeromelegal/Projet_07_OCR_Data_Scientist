@@ -13,6 +13,7 @@ API_URL = "http://api-container.germanywestcentral.azurecontainer.io:8000/predic
 ###############################################################################
 # fonctions :
 
+@st.cache_data
 def transfer_csv(url, uploaded_file):
     files = {'file': (uploaded_file.name, uploaded_file.getvalue(), 'text/csv')}
     try:
