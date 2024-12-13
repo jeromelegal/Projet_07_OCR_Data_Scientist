@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 COPY ./artifacts /artifacts
 COPY ./artifacts/LGBM_production_pipeline_model/ /artifacts/
 COPY ./artifacts/LGBM_production_pipeline_model/requirements.txt /requirements.txt
+COPY ./modules/ /app/modules/
 
 # Mettre à jour pip
 RUN pip install --upgrade pip
