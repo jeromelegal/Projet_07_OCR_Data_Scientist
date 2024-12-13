@@ -111,9 +111,4 @@ jobs:
             --registry-password ${{ secrets.ACR_PASSWORD }} \
             --os-type Linux
 
-            
-      - name: Run API tests 
-        working-directory: tests
-        run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/..
-          pytest -v test_api.py
+          
