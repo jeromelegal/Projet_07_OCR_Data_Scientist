@@ -8,4 +8,6 @@ pytest
 mlflow
 lightgbm
 scikit-learn==1.5.1
+pickle
+shap
 python-multipart

@@ -8,7 +8,8 @@ from pydantic import BaseModel
 import pandas as pd
 import numpy as np
 from io import StringIO
-
+import shap
+import pickle
 
 
 ###############################################################################
@@ -24,6 +25,16 @@ class PredictionRequest(BaseModel):
 # variables :
 
 MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:5000/invocations"
+
+###############################################################################
+# shap :
+
+with open("model.pkl", "rb") as file:
+    pipeline  = pickle.load(file)
+
+model_with_threshold = pipeline.named_steps['model_with_threshold']
+lgbm_model = model_with_threshold.model  # Accéder au modèle encapsulé
+explainer = shap.TreeExplainer(lgbm_model) 
 
 ###############################################################################
 # functions :
@@ -70,9 +81,14 @@ async def predict(file: UploadFile = File(...)):
         # Envoyer les données à MLflow
         response = requests.post(MLFLOW_URL, json=prediction_request.dict())
         response.raise_for_status()
+        predictions = response.json()
+
+        # Calculer les valeurs SHAP
+        X_transformed = pipeline[:-1].transform(df)
+        shap_values = explainer(df)
 
         # Retourner les résultats de MLflow
-        return response.json()
+        return {"predictions": predictions, "shap_values": shap_values.values.tolist()}
 
     except pd.errors.EmptyDataError:
         raise HTTPException(status_code=400, detail="Le fichier CSV est vide ou invalide.")
