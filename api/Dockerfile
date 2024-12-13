@@ -8,6 +8,7 @@ WORKDIR /app
 COPY ./main.py /app/main.py
 COPY ./requirements.txt /app/requirements.txt
 COPY ./model.pkl /app/model.pkl
+COPY ./modules/ /app/modules/
 
 # Installer les dépendances
 RUN pip install --no-cache-dir -r /app/requirements.txt
