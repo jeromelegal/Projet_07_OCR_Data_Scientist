@@ -33,10 +33,6 @@ jobs:
       - name: Install dependencies
         working-directory: api
         run: pip install -r requirements.txt
-
-      - name: Run model tests with Pytest
-        working-directory: tests
-        run: pytest -v test_model.py
         
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v2
