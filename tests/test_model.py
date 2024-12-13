@@ -2,7 +2,8 @@ import pytest
 import pandas as pd
 import mlflow.pyfunc
 import numpy as np
-
+import sys
+sys.path.append('/home/runner/work/Projet_07/Projet_07')
 
 # import TEST dataset
 @pytest.fixture(scope="module")

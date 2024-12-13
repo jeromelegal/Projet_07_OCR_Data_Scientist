@@ -4,6 +4,7 @@ import pandas as pd
 from api.main import format_data_for_api, predict
 import json
 
+
 ##############################################################################################
 ### variables
 
