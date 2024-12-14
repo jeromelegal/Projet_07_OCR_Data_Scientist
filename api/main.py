@@ -92,7 +92,13 @@ async def predict(file: UploadFile = File(...)):
         #shap.force_plot(explainer.expected_value, shap_values.values[1, :], X_display.iloc[0, :])
 
         # Retourner les résultats de MLflow
-        return {"predictions": predictions, "explained_value": explained_value,"shap_values": shap_values.values.tolist()}
+        final_response = {
+            "predictions": predictions,  # Ce que retourne MLflow
+            "explained_value": explained_value,  # Valeur expliquée par SHAP
+            "shap_values": shap_values.values.tolist()  # Valeurs SHAP sous forme de liste
+        }
+
+        return final_response
 
     except pd.errors.EmptyDataError:
         raise HTTPException(status_code=400, detail="Le fichier CSV est vide ou invalide.")
