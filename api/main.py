@@ -12,7 +12,6 @@ from io import StringIO
 import shap
 import pickle
 import modules.my_functions as mf
-import json
 
 
 ###############################################################################
@@ -98,8 +97,8 @@ async def predict(file: UploadFile = File(...)):
             "explained_value": explained_value,  # Valeur expliquée par SHAP
             "shap_values": shap_values.values.tolist()  # Valeurs SHAP sous forme de liste
         }
-
-        return JSONResponse(content=final_response)
+        print("Final JSON envoyé par l'API :", final_response)
+        return final_response
 
     except pd.errors.EmptyDataError:
         raise HTTPException(status_code=400, detail="Le fichier CSV est vide ou invalide.")
