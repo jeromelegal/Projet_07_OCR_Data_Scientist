@@ -35,6 +35,9 @@ MLFLOW_URL = "http://mlflowjlg-container.germanywestcentral.azurecontainer.io:50
 with open("model.pkl", "rb") as file:
     pipeline  = pickle.load(file)
 
+with open("feature_names.pkl", "rb") as file:
+    feature_names = pickle.load(file)
+
 model_with_threshold = pipeline.named_steps['model_with_threshold']
 lgbm_model = model_with_threshold.model  # Accéder au modèle encapsulé
 explainer = shap.TreeExplainer(lgbm_model) 
@@ -90,13 +93,20 @@ async def predict(file: UploadFile = File(...)):
         X_transformed = pipeline[:-1].transform(df)
         shap_values = explainer(X_transformed)
         explained_value = explainer.expected_value
-        #shap.force_plot(explainer.expected_value, shap_values.values[1, :], X_display.iloc[0, :])
+
+        shap_values_explanation = shap.Explanation(
+            values=shap_values.values,
+            base_values=explained_value,
+            data=X_transformed,
+            feature_names=feature_names  # Ajouter les noms des colonnes
+        )
 
         # Retourner les résultats de MLflow
         final_response = {
             "predictions": predictions,  # Ce que retourne MLflow
             "explained_value": explained_value,  # Valeur expliquée par SHAP
-            "shap_values": shap_values.values.tolist()  # Valeurs SHAP sous forme de liste
+            "shap_values": shap_values.values.tolist(),  # Valeurs SHAP sous forme de liste
+            "feature_names": shap_values_explanation.feature_names
         }
         return final_response
 

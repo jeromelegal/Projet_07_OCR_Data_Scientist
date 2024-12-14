@@ -9,6 +9,7 @@ COPY ./main.py /app/main.py
 COPY ./requirements.txt /app/requirements.txt
 COPY ./model.pkl /app/model.pkl
 COPY ./modules/ /app/modules/
+COPY ./feature_names.pkl /app/feature_names.pkl
 
 # Installer les dépendances
 RUN apt-get update && apt-get install -y libgomp1
