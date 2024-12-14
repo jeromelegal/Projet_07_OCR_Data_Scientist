@@ -4,16 +4,18 @@ FROM python:3.9.7-slim
 WORKDIR /app
 
 # Installer les outils de compilation et les dépendances système
-RUN apt-get update && apt-get install -y \
-    gcc \
-    build-essential \
-    libxxhash-dev \
-    --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -o Acquire::Retries=5 --allow-releaseinfo-change && \
+    apt-get install -y \
+        gcc \
+        build-essential \
+        libxxhash-dev \
+        --no-install-recommends && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install mlflow and requirements
-COPY ./artifacts /artifacts
-COPY ./artifacts/LGBM_production_pipeline_model/ /artifacts/
+COPY ./artifacts /app/artifacts
+COPY ./artifacts/LGBM_production_pipeline_model/ /app/artifacts/
 COPY ./artifacts/LGBM_production_pipeline_model/requirements.txt /requirements.txt
 COPY ./modules/ /app/modules/
 
