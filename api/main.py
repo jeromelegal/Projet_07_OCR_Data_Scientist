@@ -3,6 +3,7 @@
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 import requests
 from pydantic import BaseModel
 import pandas as pd
@@ -11,7 +12,7 @@ from io import StringIO
 import shap
 import pickle
 import modules.my_functions as mf
-
+import json
 
 
 ###############################################################################
@@ -98,7 +99,7 @@ async def predict(file: UploadFile = File(...)):
             "shap_values": shap_values.values.tolist()  # Valeurs SHAP sous forme de liste
         }
 
-        return final_response
+        return JSONResponse(content=final_response)
 
     except pd.errors.EmptyDataError:
         raise HTTPException(status_code=400, detail="Le fichier CSV est vide ou invalide.")
