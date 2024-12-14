@@ -98,7 +98,6 @@ async def predict(file: UploadFile = File(...)):
             "explained_value": explained_value,  # Valeur expliquée par SHAP
             "shap_values": shap_values.values.tolist()  # Valeurs SHAP sous forme de liste
         }
-        print("Final JSON envoyé par l'API :", final_response)
         return final_response
 
     except pd.errors.EmptyDataError:
